@@ -1,10 +1,18 @@
+// Hanoi Tower Somlekkk by YanwarsArief
+// Monggo di Edit sesuai Keperluan
+// Kodingna Amburadul & Logikana ngan ngandalkn Percabangan  nu simple2 weh
+//17:27 12.11.2013
+//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
 unit HanoiTower;
 
 interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls, jpeg, Buttons, StrUtils;
+  Dialogs, ExtCtrls, StdCtrls, jpeg, Buttons, StrUtils,MMSystem ;
 
 type
   TForm2 = class(TForm)
@@ -21,6 +29,10 @@ type
     sp_C: TSpeedButton;
     Timer2: TTimer;
     Timer3: TTimer;
+    Label1: TLabel;
+    lblPerintah: TLabel;
+    Label2: TLabel;
+    Image1: TImage;
     procedure FormCreate(Sender: TObject);
     procedure sp_AClick(Sender: TObject);
     procedure sp_BClick(Sender: TObject);
@@ -32,7 +44,7 @@ type
   private
     { Private declarations }
     procedure PosisiAwal();
-    procedure PindahPosisi();
+
 
   public
     { Public declarations }
@@ -51,23 +63,11 @@ var
   int_tinggitiang: integer;
   int_atastiang: integer;
   str_IsiA, str_IsiB, str_IsiC: string;
+  str_perintah:string;
 
 implementation
 
 {$R *.dfm}
-
-procedure TForm2.PindahPosisi();
-begin
-  if shblk_1.Tag = 1 then
-  begin
-    while shblk_1.Top > (int_atastiang - int_tinggiblk - int_jarak) do
-    begin
-      shblk_1.Top := shblk_1.Top - 1;
-    end;
-  end;
-
-end;
-
 procedure TForm2.PosisiAwal();
 begin
   int_jarak := 5;
@@ -112,12 +112,15 @@ end;
 procedure TForm2.FormCreate(Sender: TObject);
 begin
   str_tiang := 'A';
+  str_perintah:='C';
   PosisiAwal;
 end;
 
 procedure TForm2.sp_AClick(Sender: TObject);
 begin
-
+  if (Timer1.Enabled = true) Or (Timer2.Enabled = true) or
+    (Timer3.Enabled = true) then
+    exit;
   if (str_tiang = 'A') or (str_tiang = 'PILIHTIANG') then
   begin
     if Length(str_IsiA) = 0 then
@@ -130,10 +133,15 @@ begin
     str_pindahke := 'A';
     Timer1.Enabled := true;
   end;
+
+ //  PlaySound('sound.wav',0,SND_FILENAME);
 end;
 
 procedure TForm2.sp_BClick(Sender: TObject);
 begin
+  if (Timer1.Enabled = true) Or (Timer2.Enabled = true) or
+    (Timer3.Enabled = true) then
+    exit;
   if (str_tiang = 'B') or (str_tiang = 'PILIHTIANG') then
   begin
     if Length(str_IsiB) = 0 then
@@ -146,10 +154,14 @@ begin
     str_pindahke := 'B';
     Timer1.Enabled := true;
   end;
+  // PlaySound('sound.wav',0,SND_FILENAME);  // aktifken mun hoyong make sound ...
 end;
 
 procedure TForm2.sp_CClick(Sender: TObject);
 begin
+  if (Timer1.Enabled = true) Or (Timer2.Enabled = true) or
+    (Timer3.Enabled = true) then
+    exit;
   if (str_tiang = 'C') or (str_tiang = 'PILIHTIANG') then
   begin
     if Length(str_IsiC) = 0 then
@@ -162,6 +174,9 @@ begin
     str_pindahke := 'C';
     Timer1.Enabled := true;
   end;
+
+
+   //PlaySound('sound.wav',0,SND_FILENAME);
 end;
 
 procedure TForm2.Timer1Timer(Sender: TObject);
@@ -530,27 +545,33 @@ begin
         sp_C.Enabled := true;
         Timer3.Enabled := False;
         // cek
-        if str_pindahke='B' then
-         begin
-          if Length(str_IsiB)> 1 then
-          if (strtoint(LeftStr(str_IsiB,1))) > (strtoint(Copy(str_IsiB,2,1))) then
-          begin
-            ShowMessage('Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh ');
-            sp_BClick(Self);
-            sp_AClick(Self);
-          end;
-          end
-         else if str_pindahke='C' then
-         begin
-          if Length(str_IsiC)> 1 then
-          if (strtoInt(LeftStr(str_IsiC,1))) > (strToInt(Copy(str_IsiC,2,1))) then
-          begin
-            ShowMessage('Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh ');
-            sp_CClick(Self);
-            sp_AClick(Self);
-          end;
-         end;
-        //end of cek
+        if str_pindahke = 'B' then
+        begin
+          if Length(str_IsiB) > 1 then
+            if (strtoint(LeftStr(str_IsiB, 1))) >
+              (strtoint(Copy(str_IsiB, 2, 1))) then
+            begin
+              ShowMessage(
+                'Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh '
+                );
+              sp_BClick(Self);
+              sp_AClick(Self);
+            end;
+        end
+        else if str_pindahke = 'C' then
+        begin
+          if Length(str_IsiC) > 1 then
+            if (strtoint(LeftStr(str_IsiC, 1))) >
+              (strtoint(Copy(str_IsiC, 2, 1))) then
+            begin
+              ShowMessage(
+                'Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh '
+                );
+              sp_CClick(Self);
+              sp_AClick(Self);
+            end;
+        end;
+        // end of cek
       end;
     end
     else if LeftStr(str_IsiA, 1) = '3' then
@@ -570,27 +591,33 @@ begin
         sp_C.Enabled := true;
         Timer3.Enabled := False;
         // cek
-        if str_pindahke='B' then
-         begin
-          if Length(str_IsiB)> 1 then
-          if (strtoint(LeftStr(str_IsiB,1))) > (strtoint(Copy(str_IsiB,2,1))) then
-          begin
-            ShowMessage('Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh ');
-            sp_BClick(Self);
-            sp_AClick(Self);
-          end;
-          end
-         else if str_pindahke='C' then
-         begin
-          if Length(str_IsiC)> 1 then
-          if (strtoInt(LeftStr(str_IsiC,1))) > (strToInt(Copy(str_IsiC,2,1))) then
-          begin
-            ShowMessage('Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh ');
-            sp_CClick(Self);
-            sp_AClick(Self);
-          end;
-         end;
-        //end of cek
+        if str_pindahke = 'B' then
+        begin
+          if Length(str_IsiB) > 1 then
+            if (strtoint(LeftStr(str_IsiB, 1))) >
+              (strtoint(Copy(str_IsiB, 2, 1))) then
+            begin
+              ShowMessage(
+                'Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh '
+                );
+              sp_BClick(Self);
+              sp_AClick(Self);
+            end;
+        end
+        else if str_pindahke = 'C' then
+        begin
+          if Length(str_IsiC) > 1 then
+            if (strtoint(LeftStr(str_IsiC, 1))) >
+              (strtoint(Copy(str_IsiC, 2, 1))) then
+            begin
+              ShowMessage(
+                'Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh '
+                );
+              sp_CClick(Self);
+              sp_AClick(Self);
+            end;
+        end;
+        // end of cek
       end;
     end;
 
@@ -651,27 +678,33 @@ begin
         sp_C.Enabled := true;
         Timer3.Enabled := False;
         // cek
-        if str_pindahke='A' then
-         begin
-          if Length(str_IsiA)> 1 then
-          if (strtoint(LeftStr(str_IsiA,1))) > (strtoint(Copy(str_IsiA,2,1))) then
-          begin
-            ShowMessage('Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh ');
-            sp_AClick(Self);
-            sp_BClick(Self);
-          end;
-          end
-         else if str_pindahke='C' then
-         begin
-          if Length(str_IsiC)> 1 then
-          if (strtoInt(LeftStr(str_IsiC,1))) > (strToInt(Copy(str_IsiC,2,1))) then
-          begin
-            ShowMessage('Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh ');
-            sp_CClick(Self);
-            sp_BClick(Self);
-          end;
-         end;
-        //end of cek
+        if str_pindahke = 'A' then
+        begin
+          if Length(str_IsiA) > 1 then
+            if (strtoint(LeftStr(str_IsiA, 1))) >
+              (strtoint(Copy(str_IsiA, 2, 1))) then
+            begin
+              ShowMessage(
+                'Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh '
+                );
+              sp_AClick(Self);
+              sp_BClick(Self);
+            end;
+        end
+        else if str_pindahke = 'C' then
+        begin
+          if Length(str_IsiC) > 1 then
+            if (strtoint(LeftStr(str_IsiC, 1))) >
+              (strtoint(Copy(str_IsiC, 2, 1))) then
+            begin
+              ShowMessage(
+                'Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh '
+                );
+              sp_CClick(Self);
+              sp_BClick(Self);
+            end;
+        end;
+        // end of cek
 
       end;
     end
@@ -692,27 +725,33 @@ begin
         sp_C.Enabled := true;
         Timer3.Enabled := False;
         // cek
-        if str_pindahke='A' then
-         begin
-          if Length(str_IsiA)> 1 then
-          if (strtoint(LeftStr(str_IsiA,1))) > (strtoint(Copy(str_IsiA,2,1))) then
-          begin
-            ShowMessage('Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh ');
-            sp_AClick(Self);
-            sp_BClick(Self);
-          end;
-          end
-         else if str_pindahke='C' then
-         begin
-          if Length(str_IsiC)> 1 then
-          if (strtoInt(LeftStr(str_IsiC,1))) > (strToInt(Copy(str_IsiC,2,1))) then
-          begin
-            ShowMessage('Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh ');
-            sp_CClick(Self);
-            sp_BClick(Self);
-          end;
-         end;
-        //end of cek
+        if str_pindahke = 'A' then
+        begin
+          if Length(str_IsiA) > 1 then
+            if (strtoint(LeftStr(str_IsiA, 1))) >
+              (strtoint(Copy(str_IsiA, 2, 1))) then
+            begin
+              ShowMessage(
+                'Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh '
+                );
+              sp_AClick(Self);
+              sp_BClick(Self);
+            end;
+        end
+        else if str_pindahke = 'C' then
+        begin
+          if Length(str_IsiC) > 1 then
+            if (strtoint(LeftStr(str_IsiC, 1))) >
+              (strtoint(Copy(str_IsiC, 2, 1))) then
+            begin
+              ShowMessage(
+                'Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh '
+                );
+              sp_CClick(Self);
+              sp_BClick(Self);
+            end;
+        end;
+        // end of cek
       end;
     end;
   end // end of posisi B
@@ -727,7 +766,7 @@ begin
       else if Length(str_IsiA) = 2 then
         int_posisi := int_teratas;
     end
-    else if str_pindahke = 'B' then  // jika dipindah ke B
+    else if str_pindahke = 'B' then // jika dipindah ke B
     begin
       if Length(str_IsiB) = 0 then
         int_posisi := int_terbawah
@@ -772,27 +811,33 @@ begin
         sp_C.Enabled := true;
         Timer3.Enabled := False;
         // cek
-        if str_pindahke='A' then
-         begin
-          if Length(str_IsiA)> 1 then
-          if (strtoint(LeftStr(str_IsiA,1))) > (strtoint(Copy(str_IsiA,2,1))) then
-          begin
-            ShowMessage('Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh ');
-            sp_AClick(Self);
-            sp_CClick(Self);
-          end;
-          end
-         else if str_pindahke='B' then
-         begin
-          if Length(str_IsiB)> 1 then
-          if (strtoInt(LeftStr(str_IsiB,1))) > (strToInt(Copy(str_IsiB,2,1))) then
-          begin
-            ShowMessage('Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh ');
-            sp_BClick(Self);
-            sp_CClick(Self);
-          end;
-         end;
-        //end of cek
+        if str_pindahke = 'A' then
+        begin
+          if Length(str_IsiA) > 1 then
+            if (strtoint(LeftStr(str_IsiA, 1))) >
+              (strtoint(Copy(str_IsiA, 2, 1))) then
+            begin
+              ShowMessage(
+                'Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh '
+                );
+              sp_AClick(Self);
+              sp_CClick(Self);
+            end;
+        end
+        else if str_pindahke = 'B' then
+        begin
+          if Length(str_IsiB) > 1 then
+            if (strtoint(LeftStr(str_IsiB, 1))) >
+              (strtoint(Copy(str_IsiB, 2, 1))) then
+            begin
+              ShowMessage(
+                'Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh '
+                );
+              sp_BClick(Self);
+              sp_CClick(Self);
+            end;
+        end;
+        // end of cek
       end;
     end
     else if LeftStr(str_IsiC, 1) = '3' then
@@ -811,31 +856,51 @@ begin
         sp_B.Enabled := true;
         sp_C.Enabled := true;
         Timer3.Enabled := False;
-                // cek
-        if str_pindahke='A' then
-         begin
-          if Length(str_IsiA)> 1 then
-          if (strtoint(LeftStr(str_IsiA,1))) > (strtoint(Copy(str_IsiA,2,1))) then
-          begin
-            ShowMessage('Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh ');
-            sp_AClick(Self);
-            sp_CClick(Self);
-          end;
-          end
-         else if str_pindahke='B' then
-         begin
-          if Length(str_IsiB)> 1 then
-          if (strtoInt(LeftStr(str_IsiB,1))) > (strToInt(Copy(str_IsiB,2,1))) then
-          begin
-            ShowMessage('Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh ');
-            sp_BClick(Self);
-            sp_CClick(Self);
-          end;
-         end;
-        //end of cek
+        // cek
+        if str_pindahke = 'A' then
+        begin
+          if Length(str_IsiA) > 1 then
+            if (strtoint(LeftStr(str_IsiA, 1))) >
+              (strtoint(Copy(str_IsiA, 2, 1))) then
+            begin
+              ShowMessage(
+                'Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh '
+                );
+              sp_AClick(Self);
+              sp_CClick(Self);
+            end;
+        end
+        else if str_pindahke = 'B' then
+        begin
+          if Length(str_IsiB) > 1 then
+            if (strtoint(LeftStr(str_IsiB, 1))) >
+              (strtoint(Copy(str_IsiB, 2, 1))) then
+            begin
+              ShowMessage(
+                'Salah !!! Yang kecil diatas. Saya Kembalikan lagi ke asal deh '
+                );
+              sp_BClick(Self);
+              sp_CClick(Self);
+            end;
+        end;
+        // end of cek
       end;
     end;
   end; // end of C
+
+  if (str_perintah='C') and (str_IsiC='123') then
+  begin
+    timer3.Enabled:=false;
+    ShowMessage('Hoooooore - hoooore Anda berhasil @_@ ');
+    str_perintah:='A';
+  end
+  else if (str_perintah='A') and (str_IsiA='123') then
+  begin
+    timer3.Enabled:=false;
+    ShowMessage('Hoooooore - hoooore Anda berhasil @_@ ');
+    str_perintah:='C';
+  end;
+  lblPerintah.Caption:='Pindahkan semua balok ke posisi '+str_perintah ;
 end;
 
 end.
